@@ -32,13 +32,13 @@ icu_formatted_number_free (IcuFormattedNumber *self)
 IcuFormattedNumber *
 icu_formatted_number_new (UFormattedNumber *uresult)
 {
-  IcuFormattedNumber *self;
+  g_autoptr (IcuFormattedNumber) self = NULL;
 
   self = g_slice_new0 (IcuFormattedNumber);
   self->ref_count = 1;
   self->uresult = uresult;
 
-  return self;
+  return g_steal_pointer (&self);
 }
 
 IcuFormattedNumber *

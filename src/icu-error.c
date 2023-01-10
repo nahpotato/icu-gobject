@@ -50,7 +50,7 @@ void
 icu_set_error_from_u_error_code (GError     **error,
                                  UErrorCode   ec)
 {
-  GError *inner_error = NULL;
+  g_autoptr (GError) inner_error = NULL;
 
   if (error == NULL)
     return;
@@ -61,12 +61,7 @@ icu_set_error_from_u_error_code (GError     **error,
     return;
 
   if (*error != NULL)
-    {
-      g_warning (ERROR_OVERWRITTEN_WARNING, inner_error->message);
-      g_error_free (inner_error);
-    }
+    g_warning (ERROR_OVERWRITTEN_WARNING, inner_error->message);
   else
-    {
-      *error = inner_error;
-    }
+    *error = g_steal_pointer (&inner_error);
 }

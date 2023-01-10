@@ -18,6 +18,9 @@ struct _IcuNumberFormatter
 
 G_DEFINE_BOXED_TYPE (IcuNumberFormatter, icu_number_formatter, icu_number_formatter_ref, icu_number_formatter_unref)
 
+// Enable automatic pointers for UFormattedNumber
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (UFormattedNumber, unumf_closeResult)
+
 static void
 icu_number_formatter_free (IcuNumberFormatter *self)
 {
@@ -34,7 +37,7 @@ icu_number_formatter_new (const gchar  *skeleton,
                           const gchar  *locale,
                           GError      **error)
 {
-  IcuNumberFormatter *self = NULL;
+  g_autoptr (IcuNumberFormatter) self = NULL;
   g_autofree UChar *uskeleton = NULL;
   UErrorCode ec = U_ZERO_ERROR;
 
@@ -47,7 +50,7 @@ icu_number_formatter_new (const gchar  *skeleton,
   self->uformatter = unumf_openForSkeletonAndLocale (uskeleton, -1, locale, &ec);
   icu_handle_u_error_code (error, ec);
 
-  return self;
+  return g_steal_pointer (&self);
 }
 
 IcuNumberFormatter *
@@ -76,7 +79,7 @@ icu_number_formatter_format_int (IcuNumberFormatter  *self,
                                  gint64               value,
                                  GError             **error)
 {
-  UFormattedNumber *uresult = NULL;
+  g_autoptr (UFormattedNumber) uresult = NULL;
   UErrorCode ec = U_ZERO_ERROR;
 
   g_return_val_if_fail (self != NULL, NULL);
@@ -88,7 +91,7 @@ icu_number_formatter_format_int (IcuNumberFormatter  *self,
   unumf_formatInt (self->uformatter, value, uresult, &ec);
   icu_handle_u_error_code (error, ec);
 
-  return icu_formatted_number_new (uresult);
+  return icu_formatted_number_new (g_steal_pointer (&uresult));
 }
 
 IcuFormattedNumber *
@@ -96,7 +99,7 @@ icu_number_formatter_format_double (IcuNumberFormatter  *self,
                                     gdouble              value,
                                     GError             **error)
 {
-  UFormattedNumber *uresult = NULL;
+  g_autoptr (UFormattedNumber) uresult = NULL;
   UErrorCode ec = U_ZERO_ERROR;
 
   g_return_val_if_fail (self != NULL, NULL);
@@ -108,7 +111,7 @@ icu_number_formatter_format_double (IcuNumberFormatter  *self,
   unumf_formatDouble (self->uformatter, value, uresult, &ec);
   icu_handle_u_error_code (error, ec);
 
-  return icu_formatted_number_new (uresult);
+  return icu_formatted_number_new (g_steal_pointer (&uresult));
 }
 
 IcuFormattedNumber *
@@ -116,7 +119,7 @@ icu_number_formatter_format_decimal (IcuNumberFormatter  *self,
                                      const gchar         *value,
                                      GError             **error)
 {
-  UFormattedNumber *uresult = NULL;
+  g_autoptr (UFormattedNumber) uresult = NULL;
   UErrorCode ec = U_ZERO_ERROR;
 
   g_return_val_if_fail (self != NULL, NULL);
@@ -129,5 +132,5 @@ icu_number_formatter_format_decimal (IcuNumberFormatter  *self,
   unumf_formatDecimal (self->uformatter, value, -1, uresult, &ec);
   icu_handle_u_error_code (error, ec);
 
-  return icu_formatted_number_new (uresult);
+  return icu_formatted_number_new (g_steal_pointer (&uresult));
 }
