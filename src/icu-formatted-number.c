@@ -66,8 +66,8 @@ gchar *
 icu_formatted_number_to_string (IcuFormattedNumber  *self,
                                 GError             **error)
 {
-  UErrorCode ec = U_ZERO_ERROR;
   gint32 length = 0;
+  UErrorCode ec = U_ZERO_ERROR;
   g_autofree UChar *ustring = NULL;
   g_autofree gchar *string = NULL;
 
@@ -75,7 +75,12 @@ icu_formatted_number_to_string (IcuFormattedNumber  *self,
   g_return_val_if_fail (self->ref_count >= 1, NULL);
 
   length = unumf_resultToString (self->uresult, NULL, 0, &ec);
-  ec = U_ZERO_ERROR; // ignore U_BUFFER_OVERFLOW_ERROR
+
+  // ignore U_BUFFER_OVERFLOW_ERROR
+  if (ec == U_BUFFER_OVERFLOW_ERROR)
+    ec = U_ZERO_ERROR;
+  else
+    icu_handle_u_error_code (error, ec);
 
   ustring = g_new0 (UChar, length + 1);
   unumf_resultToString (self->uresult, ustring, length + 1, &ec);
