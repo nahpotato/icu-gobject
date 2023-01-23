@@ -74,7 +74,7 @@ icu_formatted_number_to_string (IcuFormattedNumber  *self,
   g_return_val_if_fail (self != NULL, NULL);
   g_return_val_if_fail (self->ref_count >= 1, NULL);
 
-  length = unumf_resultToString (self->uresult, NULL, -1, &ec);
+  length = unumf_resultToString (self->uresult, NULL, 0, &ec);
   ec = U_ZERO_ERROR; // ignore U_BUFFER_OVERFLOW_ERROR
 
   ustring = g_new0 (UChar, length + 1);
