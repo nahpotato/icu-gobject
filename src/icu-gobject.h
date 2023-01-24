@@ -14,11 +14,11 @@
 
 G_BEGIN_DECLS
 
-#define ICU_INSIDE
+#define _ICU_GOBJECT_INSIDE
 #  include "icu-error.h"
 #  include "icu-formatted-number.h"
 #  include "icu-number-formatter.h"
 #  include "icu-version.h"
-#undef ICU_INSIDE
+#undef _ICU_GOBJECT_INSIDE
 
 G_END_DECLS
