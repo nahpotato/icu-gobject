@@ -69,7 +69,7 @@ icu_gobject_gir = gnome.generate_gir(
   namespace         : 'Icu',
   identifier_prefix : 'Icu',
   includes          : ['Gio-2.0'],
-  header            : 'icu.h',
+  header            : 'icu-gobject.h',
   install           : true,
   symbol_prefix     : 'icu',
 )
