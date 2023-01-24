@@ -86,7 +86,7 @@ icu_formatted_number_to_string (IcuFormattedNumber  *self,
   unumf_resultToString (self->uresult, ustring, length + 1, &ec);
   icu_handle_u_error_code (error, ec);
 
-  string = g_new0 (gchar, length + 1);
+  string = g_new0 (gchar, (length + 1) * 4);
   u_austrcpy (string, ustring);
 
   return g_steal_pointer (&string);
