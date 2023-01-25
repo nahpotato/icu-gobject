@@ -10,6 +10,7 @@
 #include <unicode/unumberformatter.h>
 #include "icu-error-private.h"
 #include "icu-formatted-value-private.h"
+#include "icu-field-position-iterator-private.h"
 
 struct _IcuFormattedNumber
 {
@@ -118,6 +119,25 @@ icu_formatted_number_next_field_position (IcuFormattedNumber  *self,
   };
 
   return result;
+}
+
+void
+icu_formatted_number_get_all_field_positions (IcuFormattedNumber        *self,
+                                              IcuFieldPositionIterator  *iterator,
+                                              GError                   **error)
+{
+  UFieldPositionIterator *fpositer = NULL;
+  UErrorCode ec = U_ZERO_ERROR;
+
+  g_return_if_fail (self != NULL);
+  g_return_if_fail (self->ref_count >= 1);
+  g_return_if_fail (iterator != NULL);
+
+  fpositer = icu_field_position_iterator_get_fpositer (iterator);
+
+  unumf_resultGetAllFieldPositions (self->uresult, fpositer, &ec);
+  if (icu_has_failed (ec, error))
+    return;
 }
 
 gchar *

@@ -29,7 +29,7 @@ const gchar *icu_formatted_value_get_string (IcuFormattedValue  *self,
 
 ICU_AVAILABLE_IN_ALL
 gboolean icu_formatted_value_next_position (IcuFormattedValue            *self,
-                                            IcuConstrainedFieldPosition  *ucfpos,
+                                            IcuConstrainedFieldPosition  *position,
                                             GError                      **error);
 
 G_END_DECLS

@@ -63,18 +63,18 @@ icu_formatted_value_get_string (IcuFormattedValue  *self,
 
 gboolean
 icu_formatted_value_next_position (IcuFormattedValue            *self,
-                                   IcuConstrainedFieldPosition  *ucfpos,
+                                   IcuConstrainedFieldPosition  *position,
                                    GError                      **error)
 {
-  UConstrainedFieldPosition *real_ucfpos = NULL;
+  UConstrainedFieldPosition *ucfpos = NULL;
   gboolean result = FALSE;
   UErrorCode ec = U_ZERO_ERROR;
 
   g_return_val_if_fail (self != NULL, FALSE);
 
-  real_ucfpos = icu_constrained_field_position_get_ucfpos (ucfpos);
+  ucfpos = icu_constrained_field_position_get_ucfpos (position);
 
-  result = ufmtval_nextPosition (self->ufmtval, real_ucfpos, &ec);
+  result = ufmtval_nextPosition (self->ufmtval, ucfpos, &ec);
   if (icu_has_failed (ec, error))
     return FALSE;
 

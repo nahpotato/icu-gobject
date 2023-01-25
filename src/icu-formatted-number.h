@@ -14,6 +14,7 @@
 #include "icu-version.h"
 #include "icu-formatted-value.h"
 #include "icu-field-position.h"
+#include "icu-field-position-iterator.h"
 
 G_BEGIN_DECLS
 
@@ -37,6 +38,11 @@ ICU_AVAILABLE_IN_ALL
 gboolean icu_formatted_number_next_field_position (IcuFormattedNumber  *self,
                                                    IcuFieldPosition    *position,
                                                    GError             **error);
+
+ICU_AVAILABLE_IN_ALL
+void icu_formatted_number_get_all_field_positions (IcuFormattedNumber        *self,
+                                                   IcuFieldPositionIterator  *iterator,
+                                                   GError                   **error);
 
 ICU_AVAILABLE_IN_ALL
 gchar *icu_formatted_number_to_string         (IcuFormattedNumber  *self,
