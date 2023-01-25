@@ -1,3 +1,11 @@
+// G-I doesn't support structs
+FieldPosition struct
+
+// Not relevant here
+FieldPosition
+    .copy skip
+    .free skip
+
 // G-I G_TYPE_POINTER derived types support isn't really good
 formatted_value_get_type skip
 FormattedValue type_id="icu_formatted_value_get_type ()"

@@ -84,6 +84,42 @@ icu_formatted_number_as_value (IcuFormattedNumber  *self,
   return icu_formatted_value_new (ufmtval);
 }
 
+/**
+ * icu_formatted_number_next_field_position:
+ * @position: (inout):
+ */
+gboolean
+icu_formatted_number_next_field_position (IcuFormattedNumber  *self,
+                                          IcuFieldPosition    *position,
+                                          GError             **error)
+{
+  gboolean result = FALSE;
+  UFieldPosition ufpos = {0};
+  UErrorCode ec = U_ZERO_ERROR;
+
+  g_return_val_if_fail (self != NULL, FALSE);
+  g_return_val_if_fail (self->ref_count >= 1, FALSE);
+  g_return_val_if_fail (position != NULL, FALSE);
+
+  ufpos = (UFieldPosition) {
+    .field = (*position).field,
+    .beginIndex = (*position).begin_index,
+    .endIndex = (*position).end_index,
+  };
+
+  result = unumf_resultNextFieldPosition (self->uresult, &ufpos, &ec);
+  if (icu_has_failed (ec, error))
+    return FALSE;
+
+  *position = (IcuFieldPosition) {
+    .field = ufpos.field,
+    .begin_index = ufpos.beginIndex,
+    .end_index = ufpos.endIndex,
+  };
+
+  return result;
+}
+
 gchar *
 icu_formatted_number_to_string (IcuFormattedNumber  *self,
                                 GError             **error)
