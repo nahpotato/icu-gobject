@@ -49,8 +49,7 @@ icu_number_formatter_new (const gchar  *skeleton,
   self = g_slice_new0 (IcuNumberFormatter);
   self->ref_count = 1;
 
-  uskeleton = g_new0 (UChar, strlen (skeleton) + 1);
-  u_uastrcpy (uskeleton, skeleton);
+  uskeleton = g_utf8_to_utf16 (skeleton, -1, NULL, NULL, error);
 
   self->uformatter = unumf_openForSkeletonAndLocale (uskeleton, -1, locale, &ec);
   if (icu_has_failed (ec, error))

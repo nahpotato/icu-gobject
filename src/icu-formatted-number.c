@@ -82,8 +82,7 @@ icu_formatted_number_to_string (IcuFormattedNumber  *self,
   if (icu_has_failed (ec, error))
     return NULL;
 
-  string = g_new0 (gchar, (length + 1) * 4);
-  u_austrcpy (string, ustring);
+  string = g_utf16_to_utf8 (ustring, length, NULL, NULL, error);
 
   return g_steal_pointer (&string);
 }
