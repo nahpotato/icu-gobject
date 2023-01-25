@@ -1,0 +1,3 @@
+// G-I G_TYPE_POINTER derived types support isn't really good
+formatted_value_get_type skip
+FormattedValue type_id="icu_formatted_value_get_type ()"

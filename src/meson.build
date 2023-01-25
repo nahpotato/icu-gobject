@@ -77,11 +77,3 @@ icu_gobject_gir = gnome.generate_gir(
   install           : true,
   symbol_prefix     : 'icu',
 )
-
-icu_gobject_vapi = gnome.generate_vapi(
-  package_api_name,
-
-  install  : true,
-  packages : ['gio-2.0'],
-  sources  : icu_gobject_gir[0],
-)
