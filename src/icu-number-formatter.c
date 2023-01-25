@@ -32,6 +32,11 @@ icu_number_formatter_free (IcuNumberFormatter *self)
   g_slice_free (IcuNumberFormatter, self);
 }
 
+/**
+ * icu_number_formatter_new:
+ * @skeleton: (nullable):
+ * @locale: (nullable):
+ */
 IcuNumberFormatter *
 icu_number_formatter_new (const gchar  *skeleton,
                           const gchar  *locale,
