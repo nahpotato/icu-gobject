@@ -207,22 +207,25 @@ get_error_from_u_error_code (UErrorCode ec)
   return NULL;
 }
 
-void
-icu_set_error_from_u_error_code (GError     **error,
-                                 UErrorCode   ec)
+gboolean
+icu_has_failed (UErrorCode ec, GError **error)
 {
   g_autoptr (GError) inner_error = NULL;
 
+  if (U_SUCCESS (ec))
+    return FALSE;
+
   if (error == NULL)
-    return;
+    return TRUE;
 
   inner_error = get_error_from_u_error_code (ec);
-
   if (inner_error == NULL)
-    return;
+    return TRUE;
 
   if (*error != NULL)
     g_warning (ERROR_OVERWRITTEN_WARNING, inner_error->message);
   else
     *error = g_steal_pointer (&inner_error);
+
+  return TRUE;
 }

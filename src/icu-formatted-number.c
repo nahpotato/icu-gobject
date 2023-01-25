@@ -75,16 +75,12 @@ icu_formatted_number_to_string (IcuFormattedNumber  *self,
   g_return_val_if_fail (self->ref_count >= 1, NULL);
 
   length = unumf_resultToString (self->uresult, NULL, 0, &ec);
-
-  // ignore U_BUFFER_OVERFLOW_ERROR
-  if (ec == U_BUFFER_OVERFLOW_ERROR)
-    ec = U_ZERO_ERROR;
-  else
-    icu_handle_u_error_code (error, ec);
+  ec = U_ZERO_ERROR; // ignore U_BUFFER_OVERFLOW_ERROR
 
   ustring = g_new0 (UChar, length + 1);
   unumf_resultToString (self->uresult, ustring, length + 1, &ec);
-  icu_handle_u_error_code (error, ec);
+  if (icu_has_failed (ec, error))
+    return NULL;
 
   string = g_new0 (gchar, (length + 1) * 4);
   u_austrcpy (string, ustring);

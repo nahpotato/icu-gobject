@@ -53,7 +53,8 @@ icu_number_formatter_new (const gchar  *skeleton,
   u_uastrcpy (uskeleton, skeleton);
 
   self->uformatter = unumf_openForSkeletonAndLocale (uskeleton, -1, locale, &ec);
-  icu_handle_u_error_code (error, ec);
+  if (icu_has_failed (ec, error))
+    return NULL;
 
   return g_steal_pointer (&self);
 }
@@ -91,10 +92,12 @@ icu_number_formatter_format_int (IcuNumberFormatter  *self,
   g_return_val_if_fail (self->ref_count >= 1, NULL);
 
   uresult = unumf_openResult (&ec);
-  icu_handle_u_error_code (error, ec);
+  if (icu_has_failed (ec, error))
+    return NULL;
 
   unumf_formatInt (self->uformatter, value, uresult, &ec);
-  icu_handle_u_error_code (error, ec);
+  if (icu_has_failed (ec, error))
+    return NULL;
 
   return icu_formatted_number_new (g_steal_pointer (&uresult));
 }
@@ -111,10 +114,12 @@ icu_number_formatter_format_double (IcuNumberFormatter  *self,
   g_return_val_if_fail (self->ref_count >= 1, NULL);
 
   uresult = unumf_openResult (&ec);
-  icu_handle_u_error_code (error, ec);
+  if (icu_has_failed (ec, error))
+    return NULL;
 
   unumf_formatDouble (self->uformatter, value, uresult, &ec);
-  icu_handle_u_error_code (error, ec);
+  if (icu_has_failed (ec, error))
+    return NULL;
 
   return icu_formatted_number_new (g_steal_pointer (&uresult));
 }
@@ -132,10 +137,12 @@ icu_number_formatter_format_decimal (IcuNumberFormatter  *self,
   g_return_val_if_fail (value != NULL, NULL);
 
   uresult = unumf_openResult (&ec);
-  icu_handle_u_error_code (error, ec);
+  if (icu_has_failed (ec, error))
+    return NULL;
 
   unumf_formatDecimal (self->uformatter, value, -1, uresult, &ec);
-  icu_handle_u_error_code (error, ec);
+  if (icu_has_failed (ec, error))
+    return NULL;
 
   return icu_formatted_number_new (g_steal_pointer (&uresult));
 }
