@@ -17,6 +17,7 @@ G_BEGIN_DECLS
 #define _ICU_GOBJECT_INSIDE
 #  include "icu-constrained-field-position.h"
 #  include "icu-error.h"
+#  include "icu-field-position-iterator.h"
 #  include "icu-field-position.h"
 #  include "icu-formatted-number.h"
 #  include "icu-formatted-value.h"
