@@ -1,13 +1,17 @@
 icu_gobject_sources = [
+  'icu-constrained-field-position.c',
   'icu-error.c',
   'icu-formatted-number.c',
+  'icu-formatted-value.c',
   'icu-number-formatter.c',
   'icu-version.c',
 ]
 
 icu_gobject_headers = [
+  'icu-constrained-field-position.h',
   'icu-error.h',
   'icu-formatted-number.h',
+  'icu-formatted-value.h',
   'icu-number-formatter.h',
 ]
 

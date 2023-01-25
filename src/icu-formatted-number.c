@@ -9,6 +9,7 @@
 
 #include <unicode/unumberformatter.h>
 #include "icu-error-private.h"
+#include "icu-formatted-value-private.h"
 
 struct _IcuFormattedNumber
 {
@@ -60,6 +61,27 @@ icu_formatted_number_unref (IcuFormattedNumber *self)
 
   if (g_atomic_int_dec_and_test (&self->ref_count))
     icu_formatted_number_free (self);
+}
+
+/**
+ * icu_formatted_number_as_value:
+ * Returns: (transfer none):
+ */
+IcuFormattedValue *
+icu_formatted_number_as_value (IcuFormattedNumber  *self,
+                               GError             **error)
+{
+  const UFormattedValue *ufmtval = NULL;
+  UErrorCode ec = U_ZERO_ERROR;
+
+  g_return_val_if_fail (self != NULL, NULL);
+  g_return_val_if_fail (self->ref_count >= 1, NULL);
+
+  ufmtval = unumf_resultAsValue (self->uresult, &ec);
+  if (icu_has_failed (ec, error))
+    return NULL;
+
+  return icu_formatted_value_new (ufmtval);
 }
 
 gchar *

@@ -12,6 +12,7 @@
 
 #include <glib-object.h>
 #include "icu-version.h"
+#include "icu-formatted-value.h"
 
 G_BEGIN_DECLS
 
@@ -26,6 +27,10 @@ ICU_AVAILABLE_IN_ALL
 IcuFormattedNumber *icu_formatted_number_ref   (IcuFormattedNumber *self);
 ICU_AVAILABLE_IN_ALL
 void                icu_formatted_number_unref (IcuFormattedNumber *self);
+
+ICU_AVAILABLE_IN_ALL
+IcuFormattedValue *icu_formatted_number_as_value (IcuFormattedNumber  *self,
+                                                  GError             **error);
 
 ICU_AVAILABLE_IN_ALL
 gchar *icu_formatted_number_to_string (IcuFormattedNumber  *self,

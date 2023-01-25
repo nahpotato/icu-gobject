@@ -208,7 +208,8 @@ get_error_from_u_error_code (UErrorCode ec)
 }
 
 gboolean
-icu_has_failed (UErrorCode ec, GError **error)
+icu_has_failed (UErrorCode   ec,
+                GError     **error)
 {
   g_autoptr (GError) inner_error = NULL;
 
