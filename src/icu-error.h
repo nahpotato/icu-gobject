@@ -10,7 +10,10 @@
 #  error "Only <icu-gobject.h> can be included directly"
 #endif
 
+#include <glib-object.h>
 #include "icu-version.h"
+
+G_BEGIN_DECLS
 
 #define ICU_STANDARD_ERROR (icu_standard_error_quark())
 #define ICU_FMT_PARSE_ERROR (icu_fmt_parse_error_quark())
@@ -77,3 +80,5 @@ typedef enum {
   ICU_NUMBER_ARG_OUTOFBOUNDS_ERROR,
   ICU_NUMBER_SKELETON_SYNTAX_ERROR,
 } IcuFmtParseError;
+
+G_END_DECLS

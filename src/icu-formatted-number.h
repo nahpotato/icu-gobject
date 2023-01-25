@@ -10,8 +10,8 @@
 #  error "Only <icu-gobject.h> can be included directly"
 #endif
 
-#include "icu-version.h"
 #include <glib-object.h>
+#include "icu-version.h"
 
 G_BEGIN_DECLS
 

@@ -6,8 +6,10 @@
 
 #pragma once
 
-#include <glib.h>
+#include "icu-error.h"
 #include <unicode/utypes.h>
+
+G_BEGIN_DECLS
 
 #define icu_handle_u_error_code(error, ec)               \
   G_STMT_START                                           \
@@ -22,3 +24,5 @@
 
 G_GNUC_INTERNAL
 void icu_set_error_from_u_error_code (GError **error, UErrorCode ec);
+
+G_END_DECLS

@@ -9,5 +9,9 @@
 #include "icu-formatted-number.h"
 #include <unicode/unumberformatter.h>
 
+G_BEGIN_DECLS
+
 G_GNUC_INTERNAL
 IcuFormattedNumber *icu_formatted_number_new (UFormattedNumber *uresult);
+
+G_END_DECLS
