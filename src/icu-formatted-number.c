@@ -108,3 +108,25 @@ icu_formatted_number_to_string (IcuFormattedNumber  *self,
 
   return g_steal_pointer (&string);
 }
+
+gchar *
+icu_formatted_number_to_decimal_number (IcuFormattedNumber  *self,
+                                        GError             **error)
+{
+  gint32 length = 0;
+  UErrorCode ec = U_ZERO_ERROR;
+  g_autofree gchar *string = NULL;
+
+  g_return_val_if_fail (self != NULL, NULL);
+  g_return_val_if_fail (self->ref_count >= 1, NULL);
+
+  length = unumf_resultToDecimalNumber (self->uresult, NULL, 0, &ec);
+  ec = U_ZERO_ERROR; // ignore U_BUFFER_OVERFLOW_ERROR;
+
+  string = g_new0 (gchar, length + 1);
+  unumf_resultToDecimalNumber (self->uresult, string, length + 1, &ec);
+  if (icu_has_failed (ec, error))
+    return NULL;
+
+  return g_steal_pointer (&string);
+}

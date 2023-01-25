@@ -33,8 +33,11 @@ IcuFormattedValue *icu_formatted_number_as_value (IcuFormattedNumber  *self,
                                                   GError             **error);
 
 ICU_AVAILABLE_IN_ALL
-gchar *icu_formatted_number_to_string (IcuFormattedNumber  *self,
-                                       GError             **error);
+gchar *icu_formatted_number_to_string         (IcuFormattedNumber  *self,
+                                               GError             **error);
+ICU_AVAILABLE_IN_ALL
+gchar *icu_formatted_number_to_decimal_number (IcuFormattedNumber  *self,
+                                               GError             **error);
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (IcuFormattedNumber, icu_formatted_number_unref)
 
