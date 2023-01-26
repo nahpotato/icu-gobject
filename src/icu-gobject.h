@@ -16,11 +16,13 @@ G_BEGIN_DECLS
 
 #define _ICU_GOBJECT_INSIDE
 #  include "icu-constrained-field-position.h"
+#  include "icu-enum-types.h"
 #  include "icu-error.h"
 #  include "icu-field-position-iterator.h"
 #  include "icu-field-position.h"
 #  include "icu-formatted-number.h"
 #  include "icu-formatted-value.h"
+#  include "icu-number-format-field.h"
 #  include "icu-number-formatter.h"
 #  include "icu-version.h"
 #undef _ICU_GOBJECT_INSIDE

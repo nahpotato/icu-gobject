@@ -12,10 +12,12 @@ icu_gobject_sources = [
 icu_gobject_headers = [
   'icu-constrained-field-position.h',
   'icu-error.h',
+  'icu-field-category.h',
   'icu-field-position-iterator.h',
   'icu-field-position.h',
   'icu-formatted-number.h',
   'icu-formatted-value.h',
+  'icu-number-format-field.h',
   'icu-number-formatter.h',
 ]
 
