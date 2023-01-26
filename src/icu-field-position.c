@@ -6,6 +6,15 @@
 
 #include "icu-field-position.h"
 
+/**
+ * IcuFieldPosition:
+ * @begin_index: The start of the text range containing field.
+ * @end_index: The limit of the text range containing field.
+ * @field: The field.
+ *
+ * A struct representing a range of text containing a specific field.
+ */
+
 G_DEFINE_BOXED_TYPE (IcuFieldPosition, icu_field_position, icu_field_position_copy, icu_field_position_free)
 
 IcuFieldPosition *
