@@ -119,7 +119,7 @@ icu_constrained_field_position_unref (IcuConstrainedFieldPosition *self)
  *
  * Resets `self` to its initial state, as if it were newly created.
  *
- * Removes any constraints that may have been set on the instance.
+ * Removes any constraints that may have been set on `self`.
  */
 void
 icu_constrained_field_position_reset (IcuConstrainedFieldPosition  *self,
