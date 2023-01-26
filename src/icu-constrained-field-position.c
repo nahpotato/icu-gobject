@@ -10,6 +10,20 @@
 #include <unicode/uformattedvalue.h>
 #include "icu-error-private.h"
 
+/**
+ * IcuConstrainedFieldPosition:
+ *
+ * Represents a span of a string containing a given field.
+ *
+ * This class differs from [struct@FieldPosition] in the following
+ * ways:
+ *
+ * 1. It has information on the field category.
+ * 2. It allows you to set constraints to use when iterating over
+ *    field positions.
+ * 3. It is used for the newer [class@FormattedValue] APIs.
+ */
+
 struct _IcuConstrainedFieldPosition
 {
   guint ref_count;
@@ -29,6 +43,19 @@ icu_constrained_field_position_free (IcuConstrainedFieldPosition *self)
   g_slice_free (IcuConstrainedFieldPosition, self);
 }
 
+/**
+ * icu_constrained_field_position_new:
+ * @error: (out) (optional): The return location for a recoverable
+ *   error.
+ *
+ * Creates a new [class@ConstrainedFieldPosition].
+ *
+ * By default, the [class@ConstrainedFieldPosition] has no iteration
+ * constraints.
+ *
+ * Returns: (transfer full): A newly created
+ *   [class@ConstrainedFieldPosition].
+ */
 IcuConstrainedFieldPosition *
 icu_constrained_field_position_new (GError **error)
 {
@@ -45,6 +72,15 @@ icu_constrained_field_position_new (GError **error)
   return g_steal_pointer (&self);
 }
 
+/**
+ * icu_constrained_field_position_ref:
+ * @self: A [class@ConstrainedFieldPosition].
+ *
+ * Increases the reference count of `self` by one.
+ *
+ * Returns: (transfer full): The passed in
+ *   [class@ConstrainedFieldPosition].
+ */
 IcuConstrainedFieldPosition *
 icu_constrained_field_position_ref (IcuConstrainedFieldPosition *self)
 {
@@ -56,6 +92,15 @@ icu_constrained_field_position_ref (IcuConstrainedFieldPosition *self)
   return self;
 }
 
+/**
+ * icu_constrained_field_position_unref:
+ * @self: A [class@ConstrainedFieldPosition].
+ *
+ * Decreases the reference count of `self` by one.
+ *
+ * If the resulting reference count is zero, frees the memory of
+ * `self`.
+ */
 void
 icu_constrained_field_position_unref (IcuConstrainedFieldPosition *self)
 {
@@ -66,6 +111,16 @@ icu_constrained_field_position_unref (IcuConstrainedFieldPosition *self)
     icu_constrained_field_position_free (self);
 }
 
+/**
+ * icu_constrained_field_position_reset:
+ * @self: A [class@ConstrainedFieldPosition].
+ * @error: (out) (optional): The return location for a recoverable
+ *   error.
+ *
+ * Resets `self` to its initial state, as if it were newly created.
+ *
+ * Removes any constraints that may have been set on the instance.
+ */
 void
 icu_constrained_field_position_reset (IcuConstrainedFieldPosition  *self,
                                       GError                      **error)
@@ -80,6 +135,39 @@ icu_constrained_field_position_reset (IcuConstrainedFieldPosition  *self,
     return;
 }
 
+/**
+ * icu_constrained_field_position_constrain_category:
+ * @self: A [class@ConstrainedFieldPosition].
+ * @category: The field category to fix when iterating.
+ * @error: (out) (optional): The return location for a recoverable
+ *   error.
+ *
+ * Sets a constraint on the field category.
+ *
+ * When `self` is passed to [method@FormattedValue.next_position],
+ * positions are skipped unless they have the given category.
+ *
+ * Any previously set constraints are cleared.
+ *
+ * For example, to loop over only the number-related fields:
+ * ```c
+ * g_autoptr (IcuConstrainedFieldPosition) position = NULL;
+ *
+ * position = icu_constrained_field_position_new (NULL);
+ * icu_constrained_field_position_constrain_category (position,
+ *                                                    ICU_FIELD_CATEGORY_NUMBER,
+ *                                                    NULL);
+ *
+ * while (icu_formatted_value_next_position (value, position, NULL))
+ *   {
+ *     // handle the number-related field position
+ *   }
+ * ```
+ *
+ * Changing the constraint while in the middle of iterating over a
+ * [class@FormattedValue] does not generally have well-defined
+ * behavior.
+ */
 void
 icu_constrained_field_position_constrain_category (IcuConstrainedFieldPosition  *self,
                                                    gint32                        category,
@@ -95,6 +183,42 @@ icu_constrained_field_position_constrain_category (IcuConstrainedFieldPosition  
     return;
 }
 
+/**
+ * icu_constrained_field_position_constrain_field:
+ * @self: A [class@ConstrainedFieldPosition].
+ * @category: The field category to fix when iterating.
+ * @field: The field to fix when iterating.
+ * @error: (out) (optional): The return location for a recoverable
+ *   error.
+ *
+ * Sets a constraint on the category and field.
+ *
+ * When `self` is passed to [method@FormattedValue.next_position],
+ * positions are skipped unless they have the given category and
+ * field.
+ *
+ * Any previously set constraints are cleared.
+ *
+ * For example, to loop over all grouping separators:
+ * ```c
+ * g_autoptr (IcuConstrainedFieldPosition) position = NULL;
+ *
+ * position = icu_constrained_field_position_new (NULL);
+ * icu_constrained_field_position_constrain_field (position,
+ *                                                 ICU_FIELD_CATEGORY_NUMBER,
+ *                                                 ICU_NUM_GROUPING_SEPARATOR_FIELD,
+ *                                                 NULL);
+ *
+ * while (icu_formatted_value_next_position (value, position, NULL))
+ *   {
+ *     // handle the grouping separator position
+ *   }
+ * ```
+ *
+ * Changing the constraint while in the middle of iterating over a
+ * [class@FormattedValue] does not generally have well-defined
+ * behavior.
+ */
 void
 icu_constrained_field_position_constrain_field (IcuConstrainedFieldPosition  *self,
                                                 gint32                        category,
@@ -111,6 +235,21 @@ icu_constrained_field_position_constrain_field (IcuConstrainedFieldPosition  *se
     return;
 }
 
+/**
+ * icu_constrained_field_position_get_category:
+ * @self: A [class@ConstrainedFieldPosition].
+ * @error: (out) (optional): The return location for a recoverable
+ *   error.
+ *
+ * Gets the field category for the current position.
+ *
+ * If a category or field constraint was set, this method returns
+ * the constrained category. Otherwise, the return value is
+ * well-defined only after [method@FormattedValue.next_position]
+ * returns `TRUE`.
+ *
+ * Returns: The field category stored in `self`.
+ */
 gint32
 icu_constrained_field_position_get_category (IcuConstrainedFieldPosition  *self,
                                              GError                      **error)
@@ -128,6 +267,20 @@ icu_constrained_field_position_get_category (IcuConstrainedFieldPosition  *self,
   return category;
 }
 
+/**
+ * icu_constrained_field_position_get_field:
+ * @self: A [class@ConstrainedFieldPosition].
+ * @error: (out) (optional): The return location for a recoverable
+ *   error.
+ *
+ * Gets the field for the current position.
+ *
+ * If a field constraint was set, this function returns the
+ * constrained field. Otherwise, the return value is well-defined
+ * only after [method@FormattedValue.next_position] returns `TRUE`.
+ *
+ * Returns: The field stored in `self`.
+ */
 gint32
 icu_constrained_field_position_get_field (IcuConstrainedFieldPosition  *self,
                                           GError                      **error)
@@ -147,8 +300,19 @@ icu_constrained_field_position_get_field (IcuConstrainedFieldPosition  *self,
 
 /**
  * icu_constrained_field_position_get_indexes:
- * @start: (out) (optional):
- * @limit: (out) (optional):
+ * @self: A [class@ConstrainedFieldPosition].
+ * @start: (out) (optional): Set to the start index stored in `self`.
+ *   Ignored if `NULL`.
+ * @limit: (out) (optional): Set to the end index stored in `self`.
+ *   Ignored if `NULL`.
+ * @error: (out) (optional): The return location for a recoverable
+ *   error.
+ *
+ * Gets the **inclusive** start and **exclusive** end index stored
+ * for the current position.
+ *
+ * The output values are well-defined only after
+ * [method@FormattedValue.next_position] returns `TRUE`.
  */
 void
 icu_constrained_field_position_get_indexes (IcuConstrainedFieldPosition  *self,
@@ -166,6 +330,23 @@ icu_constrained_field_position_get_indexes (IcuConstrainedFieldPosition  *self,
     return;
 }
 
+/**
+ * icu_constrained_field_position_get_int64_iteration_context:
+ * @self: A [class@ConstrainedFieldPosition].
+ * @error: (out) (optional): The return location for a recoverable
+ *   error.
+ *
+ * Gets a `gint64` that [class@FormattedValue] implementations may
+ * use for storage.
+ *
+ * The initial value is zero.
+ *
+ * Users of [class@FormattedValue] should not need to call this
+ * method.
+ *
+ * Returns: The current iteration context from
+ *   [method@ConstrainedFieldPosition.set_int64_iteration_context].
+ */
 gint64
 icu_constrained_field_position_get_int64_iteration_context (IcuConstrainedFieldPosition  *self,
                                                             GError                      **error)
@@ -183,6 +364,18 @@ icu_constrained_field_position_get_int64_iteration_context (IcuConstrainedFieldP
   return context;
 }
 
+/**
+ * icu_constrained_field_position_set_int64_iteration_context:
+ * @self: A [class@ConstrainedFieldPosition].
+ * @context: The new iteration context.
+ * @error: (out) (optional): The return location for a recoverable
+ *   error.
+ *
+ * Sets a `gint64` that [class@FormattedValue] implementations may
+ * use for storage.
+ *
+ * Intended to be used by [class@FormattedValue] implementations.
+ */
 void
 icu_constrained_field_position_set_int64_iteration_context (IcuConstrainedFieldPosition  *self,
                                                             gint64                        context,
@@ -198,6 +391,22 @@ icu_constrained_field_position_set_int64_iteration_context (IcuConstrainedFieldP
     return;
 }
 
+/**
+ * icu_constrained_field_position_matches_field:
+ * @self: A [class@ConstrainedFieldPosition].
+ * @category: The category to test.
+ * @field: The field to test.
+ * @error: (out) (optional): The return location for a recoverable
+ *   error.
+ *
+ * Determines whether a given field should be included given the
+ * constraints.
+ *
+ * Intended to be used by [class@FormattedValue] implementations.
+ *
+ * Returns: `TRUE` if the given field should be included, `FALSE`
+ *   otherwise.
+ */
 gboolean
 icu_constrained_field_position_matches_field (IcuConstrainedFieldPosition  *self,
                                               gint32                        category,
@@ -217,6 +426,23 @@ icu_constrained_field_position_matches_field (IcuConstrainedFieldPosition  *self
   return result;
 }
 
+/**
+ * icu_constrained_field_position_set_state:
+ * @self: A [class@ConstrainedFieldPosition].
+ * @category: The new field category.
+ * @field: The new field.
+ * @start: The new inclusive start index.
+ * @limit: The new exclusive end index.
+ * @error: (out) (optional): The return location for a recoverable
+ *   error.
+ *
+ * Sets new values for the primary public getters.
+ *
+ * Intended to be used by [class@FormattedValue] implementations.
+ *
+ * It is up to the implementation to ensure that the user-requested
+ * constraints are satisfied. This method does not check!
+ */
 void
 icu_constrained_field_position_set_state (IcuConstrainedFieldPosition  *self,
                                           gint32                        category,
