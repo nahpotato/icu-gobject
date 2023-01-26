@@ -6,6 +6,10 @@
 
 #pragma once
 
+#if !defined(_ICU_GOBJECT_INSIDE) && !defined(ICU_GOBJECT_COMPILATION)
+#  error "Only <icu-gobject.h> can be included directly"
+#endif
+
 #include <glib-object.h>
 #include "icu-version.h"
 
